@@ -1,0 +1,72 @@
+﻿@using Auth2AccessToken.Models;
+@{
+    ViewBag.Title = "Home Page";
+    AccessToken token = (AccessToken)Session["Token"];
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>PowerBI Dashboard</h2>
+        <div id="reportContainer" style="height:800px"></div>
+    </div>
+</div>
+<script src="~/Scripts/powerbi.min.js"></script>
+
+
+<script type="text/javascript">
+
+        //This code is for sample purposes only.
+
+        //Configure IFrame for the Report after you have an Access Token. See Default.aspx.cs to learn how to get an Access Token
+        window.onload = function () {
+            var accessToken = '@token.access_token';// document.getElementById('MainContent_accessToken').value;
+
+            if (!accessToken || accessToken == "")
+            {
+                return;
+            }
+
+            var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=6fe9d925-67b1-4d5b-b0cb-0e614039dd12&groupId=37ecd764-74a4-4b1f-969c-097be9df6b55';//document.getElementById('MainContent_txtEmbedUrl').value;
+            var reportId = '6fe9d925-67b1-4d5b-b0cb-0e614039dd12';//document.getElementById('MainContent_txtReportId').value;
+
+            // Embed configuration used to describe the what and how to embed.
+            // This object is used when calling powerbi.embed.
+            // This also includes settings and options such as filters.
+            // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+            var config= {
+                type: 'report',
+                accessToken: accessToken,
+                embedUrl: embedUrl,
+                id: reportId,
+                settings: {
+                    filterPaneEnabled: false,
+                    navContentPaneEnabled: false
+                }
+            };
+
+            // Grab the reference to the div HTML element that will host the report.
+            var reportContainer = document.getElementById('reportContainer');
+
+            // Embed the report and display it within the div container.
+            var report = powerbi.embed(reportContainer, config);
+
+            
+            // Report.on will add an event handler which prints to Log window.
+            //report.on("loaded", function () {
+            //    var logView = document.getElementById('logView');
+            //    logView.innerHTML = logView.innerHTML + "Loaded<br/>";
+
+            //    // Report.off removes a given event handler if it exists.
+            //    report.off("loaded");
+            //});
+
+            //// Report.on will add an event handler which prints to Log window.
+            //report.on("rendered", function () {
+            //    var logView = document.getElementById('logView');
+            //    logView.innerHTML = logView.innerHTML + "Rendered<br/>";
+
+            //    // Report.off removes a given event handler if it exists.
+            //    report.off("rendered");
+            //});
+        };
+</script>
